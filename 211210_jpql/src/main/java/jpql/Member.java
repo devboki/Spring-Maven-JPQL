@@ -43,4 +43,12 @@ public class Member {
 	public void setTeam(Team team) {
 		this.team = team;
 	}
+	
+	@Override
+	public String toString() {
+		//team 양방향 되지 않도록 지우기. 무한루프
+		//return "Member [id=" + id + ", username=" + username + ", age=" + age + ", team=" + team + "]"; 
+		return "Member [id=" + id + ", username=" + username + ", age=" + age + "]";
+	}
+	
 }
