@@ -19,27 +19,31 @@ public class JpaMain {
 		
 		try { 
 			
-			for (int i = 0; i < 100; i++) {
-				Member member = new Member();
-				member.setUsername("member" + i);
-				member.setAge(i);
-				em.persist(member);
-			}
+			Team team = new Team();
+			team.setName("teamA");
+			em.persist(team);
+			
+			Member member = new Member();
+			member.setUsername("Member1");
+			member.setAge(10);
+			member.changeTeam(team);
+			em.persist(member);
+			
+			Member member2 = new Member();
+			member2.setUsername("Member2");
+			em.persist(member2);
 			
 			em.flush();
 			em.clear();
-						
-			List<Member> result = em.createQuery("select m from Member m order by m.age desc", Member.class) //꼭 order by
-				.setFirstResult(1) //(0) : order by member0_.age desc limit ?
-				//order by member0_.age desc limit ? offset ? : H2Dialect 방언. oracle 방언 -> rownum
-				.setMaxResults(10)
-				.getResultList();
 			
-			System.out.println("result.size = " + result.size());
-			for (Member member1 : result) {
-				System.out.println("member1 = " + member1);
+			String query = "select locate('de','abcdefg') From Member m"; //'abcdefg'에서 'de'는 몇번째?
+			
+			List<Integer> result = em.createQuery(query, Integer.class).getResultList();
+			
+			for (Integer s : result) {
+				System.out.println("s = " + s);
 			}
-			
+							
 			tx.commit();
 		} catch (Exception e) {
 			tx.rollback();
