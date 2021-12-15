@@ -1,10 +1,13 @@
 package jpql;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.OrderColumn;
 import javax.persistence.Persistence;
 
 public class JpaMain {
@@ -19,29 +22,38 @@ public class JpaMain {
 		
 		try { 
 			
-			Team team = new Team();
-			team.setName("teamA");
-			em.persist(team);
+			Team teamA = new Team();
+			teamA.setName("팀A");
+			em.persist(teamA);
 			
-			Member member = new Member();
-			member.setUsername("Member1");
-			member.setAge(10);
-			member.changeTeam(team);
-			em.persist(member);
+			Team teamB = new Team();
+			teamB.setName("팀B");
+			em.persist(teamB);
+			
+			Member member1 = new Member();
+			member1.setUsername("회원1");
+			member1.changeTeam(teamA);
+			em.persist(member1);
 			
 			Member member2 = new Member();
-			member2.setUsername("Member2");
+			member2.setUsername("회원2");
+			member2.changeTeam(teamA);
 			em.persist(member2);
+			
+			Member member3 = new Member();
+			member3.setUsername("회원3");
+			member3.changeTeam(teamB);
+			em.persist(member3);
 			
 			em.flush();
 			em.clear();
 			
-			String query = "select locate('de','abcdefg') From Member m"; //'abcdefg'에서 'de'는 몇번째?
+			List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
+				.setParameter("username", "회원1")
+				.getResultList();
 			
-			List<Integer> result = em.createQuery(query, Integer.class).getResultList();
-			
-			for (Integer s : result) {
-				System.out.println("s = " + s);
+			for (Member member : resultList) {
+				System.out.println("member = " + member);
 			}
 							
 			tx.commit();
