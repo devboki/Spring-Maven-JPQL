@@ -48,13 +48,9 @@ public class JpaMain {
 			em.flush();
 			em.clear();
 			
-			List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
-				.setParameter("username", "회원1")
-				.getResultList();
-			
-			for (Member member : resultList) {
-				System.out.println("member = " + member);
-			}
+			//모든 회원의 나이를 20살로 변경
+			int resultCount = em.createQuery("update Member m set m.age = 20").executeUpdate();
+			System.out.println("resultCount = " + resultCount);
 							
 			tx.commit();
 		} catch (Exception e) {
